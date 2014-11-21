@@ -150,6 +150,7 @@ public class IccCardProxy extends Handler implements IccCard {
             //Cleanup icc references
             mUiccController.unregisterForIccChanged(this);
             mUiccController = null;
+	    mExternalState = State.UNKNOWN;
             mCi.unregisterForOn(this);
             mCi.unregisterForOffOrNotAvailable(this);
             mCdmaSSM.dispose(this);

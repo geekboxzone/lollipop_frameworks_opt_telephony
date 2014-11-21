@@ -1241,11 +1241,11 @@ final class GsmServiceStateTracker extends ServiceStateTracker {
     }
 
     private void queueNextSignalStrengthPoll() {
-        if (mDontPollSignalStrength) {
+        /*if (mDontPollSignalStrength) {
             // The radio is telling us about signal strength changes
             // we don't have to ask it
             return;
-        }
+        } */
 
         Message msg;
 

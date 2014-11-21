@@ -346,7 +346,8 @@ public class UiccController extends Handler {
 */
         } else {
             //Update already existing card
-            mUiccCards[index].update(mContext, mCis[index] , status);
+            //mUiccCards[index].update(mContext, mCis[index] , status);
+	    mUiccCards[index] = new UiccCard(mContext, mCis[index], status, index);
         }
 
         if (DBG) log("Notifying IccChangedRegistrants");
