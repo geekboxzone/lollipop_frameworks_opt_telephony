@@ -15,7 +15,7 @@
 */
 
 package com.android.internal.telephony;
-
+import android.os.SystemProperties;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -175,7 +175,14 @@ public class SubscriptionController extends ISub.Stub {
     }
 
     private boolean isSubInfoReady() {
-        return mSlotIdxToSubId.size() > 0;
+       // return mSlotIdxToSubId.size() > 0;
+       String sim_state ;
+        sim_state = SystemProperties.get("gsm.sim.state");
+         if(sim_state.equals("READY")){
+           logd("sim_state is :" + sim_state);
+           return true;
+          }else
+          return false;
     }
 
     private SubscriptionController(Phone phone) {
@@ -1054,7 +1061,8 @@ public class SubscriptionController extends ISub.Stub {
 
         int size = mSlotIdxToSubId.size();
         if (size == 0) {
-            phoneId = mDefaultPhoneId;
+            //phoneId = mDefaultPhoneId;
+            phoneId = 0;
             if (DBG) logdl("[getPhoneId]- no sims, returning default phoneId=" + phoneId);
             return phoneId;
         }
@@ -1084,10 +1092,12 @@ public class SubscriptionController extends ISub.Stub {
         // but no connection came up on sprout with two sims.
         // We need to figure out why and hopefully remove DummySubsIds!!!
         int numSubs = getActiveSubInfoCountMax();
+         int dummySub = 0;
         if (numSubs > 0) {
             int[] dummyValues = new int[numSubs];
             for (int i = 0; i < numSubs; i++) {
-                dummyValues[i] = SubscriptionManager.DUMMY_SUBSCRIPTION_ID_BASE - slotIdx;
+               // dummyValues[i] = SubscriptionManager.DUMMY_SUBSCRIPTION_ID_BASE - slotIdx;
+            dummyValues[i] = 0;
             }
             if (DBG) {
                 logd("getDummySubIds: slotIdx=" + slotIdx
@@ -1230,9 +1240,10 @@ public class SubscriptionController extends ISub.Stub {
 
     @Override
     public int getDefaultDataSubId() {
-        int subId = Settings.Global.getInt(mContext.getContentResolver(),
-                Settings.Global.MULTI_SIM_DATA_CALL_SUBSCRIPTION,
-                SubscriptionManager.INVALID_SUBSCRIPTION_ID);
+       // int subId = Settings.Global.getInt(mContext.getContentResolver(),
+         //       Settings.Global.MULTI_SIM_DATA_CALL_SUBSCRIPTION,
+           //     SubscriptionManager.INVALID_SUBSCRIPTION_ID);
+        int subId = 0;
         if (VDBG) logd("[getDefaultDataSubId] subId= " + subId);
         return subId;
     }

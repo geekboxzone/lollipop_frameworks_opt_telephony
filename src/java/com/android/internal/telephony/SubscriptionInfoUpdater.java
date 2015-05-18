@@ -288,11 +288,18 @@ public class SubscriptionInfoUpdater extends Handler {
             logd("onRecieve: IccRecords null");
             return;
         }
+     /*
         if (records.getIccId() == null) {
             logd("onRecieve: IccID null");
             return;
         }
+     
         mIccId[slotId] = records.getIccId();
+*/
+        String sim_state = SystemProperties.get("gsm.sim.state");
+        if(sim_state.equals("READY")){
+        mIccId[slotId] = "89860002091070314495";      
+        }       
 
         if (isAllIccIdQueryDone()) {
             updateSubscriptionInfoByIccId();
@@ -392,7 +399,7 @@ public class SubscriptionInfoUpdater extends Handler {
      */
     synchronized private void updateSubscriptionInfoByIccId() {
         logd("updateSubscriptionInfoByIccId:+ Start");
-
+        boolean there_is_sim;
         mSubscriptionManager.clearSubscriptionInfo();
 
         for (int i = 0; i < PROJECT_SIM_NUM; i++) {
@@ -407,7 +414,7 @@ public class SubscriptionInfoUpdater extends Handler {
             }
         }
         logd("insertedSimCount = " + insertedSimCount);
-
+/*
         int index = 0;
         for (int i = 0; i < PROJECT_SIM_NUM; i++) {
             if (mInsertSimState[i] == SIM_NOT_INSERT) {
@@ -422,7 +429,7 @@ public class SubscriptionInfoUpdater extends Handler {
                 }
             }
         }
-
+*/
         ContentResolver contentResolver = mContext.getContentResolver();
         String[] oldIccId = new String[PROJECT_SIM_NUM];
         for (int i = 0; i < PROJECT_SIM_NUM; i++) {
@@ -445,12 +452,20 @@ public class SubscriptionInfoUpdater extends Handler {
                             + Integer.toString(oldSubInfo.get(0).getSubscriptionId()), null);
                 }
             } else {
-                if (mInsertSimState[i] == SIM_NOT_CHANGE) {
+               // if (mInsertSimState[i] == SIM_NOT_CHANGE) {
                     // no SIM inserted last time, but there is one SIM inserted now
-                    mInsertSimState[i] = SIM_CHANGED;
-                }
+                 //   mInsertSimState[i] = SIM_CHANGED;
+               // }
                 oldIccId[i] = ICCID_STRING_FOR_NO_SIM;
-                logd("updateSubscriptionInfoByIccId: No SIM in slot " + i + " last time");
+                           //add by rochip xxh
+               String simstate = SystemProperties.get("gsm.sim.state");
+               if(simstate.equals("READY")){
+                logd("updateSubscriptionInfoByIccId: new sim for 3G dongle"); 
+                logd("insertedSimCount = " + insertedSimCount);
+        
+                 mInsertSimState[i] =  SIM_NEW;
+               
+               }
             }
         }
 
