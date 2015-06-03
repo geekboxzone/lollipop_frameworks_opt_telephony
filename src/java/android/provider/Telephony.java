@@ -2654,6 +2654,13 @@ public final class Telephony {
          * @hide
          */
         public static final String MTU = "mtu";
+
+        /**
+         * The value of IS_LOCKED for  which APN is locked.
+         * <p>Type: INTEGER </p>
+         * @hide
+        */
+        public static final String IS_LOCKED = "is_locked";
     }
 
     /**
